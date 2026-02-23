@@ -1,0 +1,708 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 2597 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(# Virtual Calendar - Bible Document) Tj
+T* () Tj
+T* (## 1\) 30-Second Pitch \(Role-Specific Versions\)) Tj
+T* () Tj
+T* (### Backend Engineer Pitch) Tj
+T* (I built **Virtual Calendar**, a Java 11 calendar platform that supports multi-calendar timezone) Tj
+T* (isolation, recurring event logic, series-level edits, copying across date ranges, analytics,) Tj
+T* (and dual interfaces \(CLI + Swing GUI\). The architecture separates command parsing, services,) Tj
+T* (and domain modeling, with exporter abstractions for CSV/ICAL and a CI-backed quality workflow.) Tj
+T* () Tj
+T* (### Full-Stack / Product Engineer Pitch) Tj
+T* (Virtual Calendar is a complete scheduling system with a desktop GUI and scriptable CLI,) Tj
+T* (designed for real-world operations: create/edit recurring events, duplicate schedules between) Tj
+T* (teams, run date-range analytics, and export in interoperable formats. I focused on clean) Tj
+T* (layering and extensibility, so adding APIs or cloud persistence later is straightforward.) Tj
+T* () Tj
+T* (### QA / SDET Pitch) Tj
+T* (This project is a test-heavy Java application with broad command and service coverage) Tj
+T* (\(commands, event lifecycle, export behavior, GUI headless checks, date utilities\). I designed) Tj
+T* (it to support deterministic command-driven testing and report quality through Gradle test) Tj
+T* (pipelines and CI.) Tj
+T* () Tj
+T* (### Data / Analytics Pitch) Tj
+T* (Beyond CRUD, the project computes practical calendar intelligence-event volume by) Tj
+T* (day/week/month, busiest/least-busy day, and online vs non-online split-useful for operational) Tj
+T* (planning, utilization tracking, and downstream BI.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 2\) What the Project Does \(Plain English\)) Tj
+T* (Virtual Calendar lets users create multiple named calendars \(each in its own timezone\), add) Tj
+T* (normal or recurring events, edit one event or many future/series instances, query availability) Tj
+T* (and schedules, copy events between calendars and dates, and export to CSV/ICS.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 3\) What Problem It Solves) Tj
+T* (Most lightweight scheduling tools either:) Tj
+T* (- handle only one calendar,) Tj
+T* (- don't support robust recurring edits,) Tj
+T* (- can't be automated from scripts,) Tj
+T* (- or don't expose analytics/export.) Tj
+T* () Tj
+T* (This project solves those gaps by combining:) Tj
+T* (- **human-friendly CLI automation**,) Tj
+T* (- **visual Swing interaction**,) Tj
+T* (- **structured export formats**,) Tj
+T* (- **analytics for decision making**,) Tj
+ET
+endstream
+endobj
+3 0 obj
+<< /Length 1913 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(- and **timezone-aware multi-calendar operations**.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 4\) Architecture Deep Dive \(with diagram\)) Tj
+T* () Tj
+T* (### Layered Design) Tj
+T* (- **Entry Point**: `CalendarRunner`) Tj
+T* (- **Controller Orchestration**: `CommandInvoker`, command handlers) Tj
+T* (- **Service Layer**: Event/query/copy/export services) Tj
+T* (- **Domain Model**: CalendarService, Event, analytics model) Tj
+T* (- **Presentation**: Console view + Swing view/viewmodel) Tj
+T* () Tj
+T* (### Diagram \(Mermaid\)) Tj
+T* (```mermaid) Tj
+T* (flowchart TD) Tj
+T* (  A[CalendarRunner] --> B[CommandInvoker]) Tj
+T* (  A --> C[SwingCalendarApp]) Tj
+T* (  C --> D[GuiController Adapter]) Tj
+T* (  B --> E[Command Handlers]) Tj
+T* (  E --> F[Service Layer]) Tj
+T* (  F --> G[CalendarManager]) Tj
+T* (  G --> H[CalendarService / Model]) Tj
+T* (  H --> I[Events + Calendars]) Tj
+T* (  F --> J[ExportFormatterFactory]) Tj
+T* (  J --> K[CSV Formatter]) Tj
+T* (  J --> L[ICAL Formatter]) Tj
+T* (  C --> M[CalendarViewModel / ReadOnly]) Tj
+T* (```) Tj
+T* () Tj
+T* (### Why this architecture works) Tj
+T* (- Command parsing complexity is isolated from business logic.) Tj
+T* (- GUI actions are mediated via controller adapter, not direct model mutation.) Tj
+T* (- Export strategy pattern makes file format additions low-risk.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 5\) Data/System Flow - Step by Step) Tj
+T* (1. User enters CLI command \(or triggers GUI action\).) Tj
+T* (2. Command routed through invoker/adapter.) Tj
+T* (3. Command object parses parameters and validates syntax.) Tj
+T* (4. Service layer executes operation-level logic.) Tj
+T* (5. Manager/model mutate calendar/event state.) Tj
+T* (6. Console output \(or GUI refresh through read-only projection\) reflects latest state.) Tj
+T* (7. Optional export serializes state to CSV/ICAL.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Length 3239 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(## 6\) Tech Stack - What & Why Each Choice) Tj
+T* (- **Java 11 target**: stable language/runtime for enterprise-like OOP patterns.) Tj
+T* (- **Gradle**: dependency/task orchestration and CI compatibility.) Tj
+T* (- **JUnit 4**: broad unit tests, command/service-level verifications.) Tj
+T* (- **Swing**: native desktop UI with low dependency overhead.) Tj
+T* (- **Checkstyle + JaCoCo + PIT config**: code quality, coverage, mutation quality gates.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 7\) Project File Structure - Every File Explained) Tj
+T* () Tj
+T* (### Root / Config) Tj
+T* (- `README.md`: usage and command reference.) Tj
+T* (- `build.gradle`: plugins, dependencies, test/quality tasks, PIT config.) Tj
+T* (- `settings.gradle`: Gradle project naming/settings.) Tj
+T* (- `.github/workflows/ci.yml`: CI build/test on push/PR.) Tj
+T* (- `config/checkstyle/checkstyle.xml`: style enforcement rules.) Tj
+T* (- `questionnaire.txt`, `USEME.md`: project/supporting docs.) Tj
+T* () Tj
+T* (### Runtime Resources \(`res/`\)) Tj
+T* (- `commands.txt`: sample headless execution script.) Tj
+T* (- `*.csv`, `*.ical`, `*.ics`: sample exported artifacts.) Tj
+T* (- `*.jpeg`, `Misc.md`: supporting visuals/notes.) Tj
+T* (- `invalid.txt`: invalid-input sample.) Tj
+T* () Tj
+T* (### Source \(Main\)) Tj
+T* (- `src/main/java/CalendarRunner.java`: app entry, mode selection, loop bootstrap.) Tj
+T* (- `src/main/java/calendar/model/IEvent.java`: event abstraction contract.) Tj
+T* (- `src/main/java/calendar/model/Event.java`: event entity and behavior.) Tj
+T* (- `src/main/java/calendar/model/CalendarModel.java`: calendar model abstraction.) Tj
+T* (- `src/main/java/calendar/model/CalendarService.java`: central model implementation.) Tj
+T* (- `src/main/java/calendar/model/CalendarAnalytics.java`: analytics calculations.) Tj
+T* (- `src/main/java/calendar/controller/CalendarManager.java`: orchestration facade over model.) Tj
+T* (- `src/main/java/calendar/controller/GuiController.java`: GUI interaction interface.) Tj
+T* (- `src/main/java/calendar/controller/services/CalendarService.java`: calendar-related) Tj
+T* (operations.) Tj
+T* (- `src/main/java/calendar/controller/services/EventService.java`: event create/edit operations.) Tj
+T* (- `src/main/java/calendar/controller/services/CopyService.java`: copy operations.) Tj
+T* (- `src/main/java/calendar/controller/services/QueryService.java`: query/status retrieval.) Tj
+T* (- `src/main/java/calendar/controller/services/ExportService.java`: export workflow.) Tj
+T* (- `src/main/java/calendar/controller/export/ExportFormatter.java`: formatter contract.) Tj
+T* (- `src/main/java/calendar/controller/export/CsvExportFormatter.java`: CSV serializer.) Tj
+T* (- `src/main/java/calendar/controller/export/IcalExportFormatter.java`: ICAL serializer.) Tj
+T* (- `src/main/java/calendar/controller/export/ExportFormatterFactory.java`: format resolver.) Tj
+T* (- `src/main/java/calendar/controller/commands/Command.java`: command interface.) Tj
+T* (- `src/main/java/calendar/controller/commands/CommandInvoker.java`: top-level command dispatch.) Tj
+T* (- `src/main/java/calendar/controller/commands/CommandInvokerControllerAdapter.java`:) Tj
+T* (GUI-to-command adapter.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Length 3204 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(- `src/main/java/calendar/controller/commands/CreateCalendarCommand.java`: calendar create) Tj
+T* (parsing.) Tj
+T* (- `src/main/java/calendar/controller/commands/UseCalendarCommand.java`: active calendar switch.) Tj
+T* (- `src/main/java/calendar/controller/commands/EditCalendarCommand.java`: calendar edit parsing.) Tj
+T* (- `src/main/java/calendar/controller/commands/CreateEventCommand.java`: event create parsing.) Tj
+T* (- `src/main/java/calendar/controller/commands/EditEventCommands.java`: event edit parsing.) Tj
+T* (- `src/main/java/calendar/controller/commands/CopyCommands.java`: copy command parsing.) Tj
+T* (- `src/main/java/calendar/controller/commands/QueryCommands.java`: print/status commands.) Tj
+T* (- `src/main/java/calendar/controller/commands/ExportCommand.java`: export command parsing.) Tj
+T* (- `src/main/java/calendar/controller/commands/ShowCalendarDashboardCommand.java`: analytics) Tj
+T* (command.) Tj
+T* (- `src/main/java/calendar/view/CalendarView.java`: view output contract.) Tj
+T* (- `src/main/java/calendar/view/ConsoleView.java`: stdout/stderr view implementation.) Tj
+T* (- `src/main/java/calendar/view/CalendarReadOnly.java`: GUI read-only projection contract.) Tj
+T* (- `src/main/java/calendar/view/CalendarViewModel.java`: read-model adapter for GUI.) Tj
+T* (- `src/main/java/calendar/view/SwingCalendarView.java`: GUI view contract/implementation layer.) Tj
+T* (- `src/main/java/calendar/gui/SwingCalendarApp.java`: main Swing app shell.) Tj
+T* (- `src/main/java/calendar/gui/CreateEventDialog.java`: event-create form.) Tj
+T* (- `src/main/java/calendar/gui/CreateRecurringDialog.java`: recurring-create form.) Tj
+T* (- `src/main/java/calendar/gui/EditEventDialog.java`: event edit form.) Tj
+T* (- `src/main/java/calendar/gui/AnalyticsDialog.java`: dashboard UI.) Tj
+T* (- `src/main/java/calendar/util/DateTimes.java`: datetime parse/format helpers.) Tj
+T* (- `src/main/java/calendar/util/DayCodes.java`: recurring day code parsing.) Tj
+T* () Tj
+T* (### Source \(Tests\)) Tj
+T* (- `src/test/java/CalendarTest.java`, `CalendarRunnerTest.java`: app-level behavior tests.) Tj
+T* (- `src/test/java/calendar/model/*`: model/analytics/event tests.) Tj
+T* (- `src/test/java/calendar/controller/*`: manager, command, export, service tests.) Tj
+T* (- `src/test/java/calendar/view/*`: view and viewmodel tests.) Tj
+T* (- `src/test/java/calendar/gui/*`: GUI headless/behavior tests.) Tj
+T* (- `src/test/java/calendar/util/*`: utility date parsing tests.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 8\) Code Walkthrough - Key Snippets Explained) Tj
+T* () Tj
+T* (### Unified launch path) Tj
+T* (`CalendarRunner` wires model, manager, view, and command invoker once, then chooses) Tj
+T* (GUI/interactive/headless mode from CLI args.) Tj
+T* () Tj
+T* (### Command pattern usage) Tj
+T* (`CommandInvoker` delegates to command handlers \(`CreateEventCommand`, `EditEventCommands`,) Tj
+T* (etc.\), minimizing condition-heavy logic in the entrypoint.) Tj
+T* () Tj
+T* (### Export strategy) Tj
+T* (`ExportFormatterFactory` picks `CsvExportFormatter` or `IcalExportFormatter` based on) Tj
+T* (extension, keeping export logic open for extension.) Tj
+T* () Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 1888 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(### GUI decoupling) Tj
+T* (GUI mutates state through `GuiController` adapter and reads through `CalendarReadOnly`, which) Tj
+T* (protects model internals and supports testability.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 9\) Database/Data Model \(Schema, ERD, Relationships\)) Tj
+T* (There is **no external database** in current version; storage is in-memory model objects.) Tj
+T* () Tj
+T* (### Logical ERD \(conceptual\)) Tj
+T* (```text) Tj
+T* (Calendar \(name, timezone\)) Tj
+T* (  1 ??? * Event \(subject, start, end, allDay, location, description, visibility ...\)) Tj
+T* (```) Tj
+T* () Tj
+T* (Relationships:) Tj
+T* (- One calendar holds many events.) Tj
+T* (- Recurring series are represented through repeated event instances \(same subject/pattern) Tj
+T* (metadata depending on operation\).) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 10\) Key Features & Unique Differentiators) Tj
+T* (- Multi-calendar with independent timezones.) Tj
+T* (- Single + recurring events with rich edit scopes \(single/future/series\).) Tj
+T* (- Cross-calendar and cross-date copy operations.) Tj
+T* (- Dual interface model \(scriptable CLI + GUI\).) Tj
+T* (- Analytics dashboard in both command and visual contexts.) Tj
+T* (- Multi-format export \(CSV + ICAL\).) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 11\) Configuration / Environment Variables Reference) Tj
+T* (Current project has **minimal env config**.) Tj
+T* () Tj
+T* (| Variable | Required | Purpose |) Tj
+T* (|---|---:|---|) Tj
+T* (| `JAVA_HOME` | Recommended | Ensures a compatible Java runtime for Gradle/tasks. |) Tj
+T* () Tj
+T* (Primary runtime configuration is via CLI args:) Tj
+T* (- `--mode gui`) Tj
+T* (- `--mode interactive`) Tj
+T* (- `--mode headless <file>`) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 12\) How to Run - Complete Setup Guide) Tj
+T* (1. Install Java \(project targets Java 11 behavior\).) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Length 1933 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(2. From repo root run:) Tj
+T* (   - `./gradlew clean build`) Tj
+T* (3. Run one of:) Tj
+T* (   - `java -jar build/libs/calendar-1.0.jar`) Tj
+T* (   - `java -jar build/libs/calendar-1.0.jar --mode interactive`) Tj
+T* (   - `java -jar build/libs/calendar-1.0.jar --mode headless res/commands.txt`) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 13\) All Available Commands & Scripts) Tj
+T* () Tj
+T* (### Gradle) Tj
+T* (- `./gradlew clean build`) Tj
+T* (- `./gradlew test`) Tj
+T* (- `./gradlew checkstyleMain checkstyleTest`) Tj
+T* (- `./gradlew jacocoTestReport`) Tj
+T* (- `./gradlew pitest`) Tj
+T* () Tj
+T* (### App Scripts) Tj
+T* (- Headless sample: `res/commands.txt`) Tj
+T* () Tj
+T* (### CLI Commands \(application\)) Tj
+T* (- Calendar: create/use/edit) Tj
+T* (- Event: create/edit \(single/future/series\)) Tj
+T* (- Copy: one-day/range/event copy to target calendar/date) Tj
+T* (- Query: print events, show status) Tj
+T* (- Export: csv/ical/ics) Tj
+T* (- Analytics: dashboard over date interval) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 14\) Design Decisions & Tradeoffs) Tj
+T* (- **Pro**: command classes reduce parser complexity in one giant class.) Tj
+T* (- **Con**: large number of command classes increases navigation overhead.) Tj
+T* (- **Pro**: in-memory model keeps project simple for demos and tests.) Tj
+T* (- **Con**: no persistence, so restart loses data.) Tj
+T* (- **Pro**: Swing avoids external dependencies.) Tj
+T* (- **Con**: limits modern web/mobile delivery.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 15\) ?How I Built This? - Timeline, Problems Faced & Solved) Tj
+T* (1. Built base model for calendars/events.) Tj
+T* (2. Added CLI parsing + command invoker.) Tj
+T* (3. Introduced recurring event and edit-scope logic.) Tj
+T* (4. Added export format abstraction.) Tj
+T* (5. Added GUI layer via read-only projection and controller adapter.) Tj
+T* (6. Added analytics and test expansion.) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Length 2036 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+() Tj
+T* (Likely major challenges solved:) Tj
+T* (- Date/time parsing consistency across commands.) Tj
+T* (- Handling future/series edits without breaking isolated instances.) Tj
+T* (- Keeping GUI and CLI behavior aligned by sharing controller/model pathways.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 16\) Performance Benchmarks \(Actual Numbers from Runs\)) Tj
+T* () Tj
+T* (### Environment run metrics \(this workspace\)) Tj
+T* (- `./gradlew clean test` elapsed: **1.133s**) Tj
+T* (- user CPU: **1.632s**, sys CPU: **0.786s**) Tj
+T* (- max RSS: **112572 KB**) Tj
+T* (- result: **FAILED** due to `Unsupported class file major version 69` \(runtime/tooling) Tj
+T* (compatibility issue in this environment\)) Tj
+T* () Tj
+T* (> Note: These are still real measured execution numbers from the current run; full functional) Tj
+T* (benchmarking requires Java/Gradle compatibility alignment.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 17\) Scaling Analysis \(what breaks at 10x, 100x\)) Tj
+T* (### At 10x events) Tj
+T* (- In-memory queries may remain acceptable if sorted/indexed usage is efficient.) Tj
+T* (- Export and analytics likely become the first noticeable latency points.) Tj
+T* () Tj
+T* (### At 100x events) Tj
+T* (- Full scans for query/copy/analytics can become bottlenecks.) Tj
+T* (- GUI responsiveness may degrade on month render and filtering.) Tj
+T* () Tj
+T* (### Mitigations) Tj
+T* (- Add indexes by date/calendar/subject.) Tj
+T* (- Move to persistent storage \(SQL or document DB\).) Tj
+T* (- Introduce async export/analytics jobs.) Tj
+T* (- Cache recurring expansion results.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 18\) Testing Strategy & Coverage) Tj
+T* (- Unit tests across model/controller/services/view/util.) Tj
+T* (- Command parsing smoke + branch tests.) Tj
+T* (- Export content tests for format correctness.) Tj
+T* (- GUI headless tests for dialog-level behavior.) Tj
+T* (- Coverage and mutation tooling configured \(JaCoCo + PIT\) for quality depth.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Length 1789 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(## 19\) CI/CD Pipeline) Tj
+T* (Current CI \(`.github/workflows/ci.yml`\):) Tj
+T* (1. Checkout) Tj
+T* (2. Setup Java 11) Tj
+T* (3. `chmod +x gradlew`) Tj
+T* (4. `./gradlew clean test`) Tj
+T* () Tj
+T* (For full CD, next step would be build artifacts + release publishing.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 20\) Production Readiness - Current vs Production) Tj
+T* (### Current) Tj
+T* (- In-memory state) Tj
+T* (- desktop/CLI runtime) Tj
+T* (- strong local test structure) Tj
+T* () Tj
+T* (### Needed for production) Tj
+T* (- persistent DB) Tj
+T* (- authn/authz + audit trail) Tj
+T* (- observability \(logs/metrics/traces\)) Tj
+T* (- API layer + deployment targets) Tj
+T* (- backup/recovery strategy) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 21\) How to Extend \(Future Improvements\)) Tj
+T* (- REST API gateway above service layer.) Tj
+T* (- PostgreSQL persistence with migration scripts.) Tj
+T* (- Recurrence rules compatible with full RFC \(RRULE enhancements\).) Tj
+T* (- Role-based access + collaboration features.) Tj
+T* (- Calendar sync integrations \(Google/Outlook\).) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 22\) Comparison - Why Yours Stands Out vs Similar Projects) Tj
+T* (Compared with many student/project calendars, this one stands out by combining:) Tj
+T* (- both **GUI and scriptable CLI**,) Tj
+T* (- **multi-calendar timezone operations**,) Tj
+T* (- **recurring edit scopes** \(single/future/series\),) Tj
+T* (- and **analytics + export interoperability**.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 23\) Skills Demonstrated ? Resume Keyword Map) Tj
+T* (- **Java OOP** ? domain-driven object modeling) Tj
+T* (- **Command Pattern** ? extensible command processing) Tj
+T* (- **Layered Architecture** ? controller/service/model separation) Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Length 2298 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(- **Date-Time Handling** ? timezone-safe scheduling) Tj
+T* (- **Testing** ? JUnit, coverage, mutation testing) Tj
+T* (- **CI** ? GitHub Actions automation) Tj
+T* (- **Desktop UI** ? Java Swing MVC-style integration) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 24\) Role Fit Matrix) Tj
+T* (| Role | Fit | Why |) Tj
+T* (|---|---|---|) Tj
+T* (| Backend Engineer | High | command/services/model design and export workflows |) Tj
+T* (| Full-Stack Engineer | Medium-High | end-to-end product with GUI + logic |) Tj
+T* (| SDET/QA | High | strong command/service tests and quality tooling |) Tj
+T* (| Data/Analytics Engineer | Medium | analytics module and metric computations |) Tj
+T* (| DevOps | Medium | CI configured; CD can be extended |) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 25\) Combined Portfolio Story) Tj
+T* (This project works best in a portfolio as:) Tj
+T* (- ?**system design + product execution**? piece,) Tj
+T* (- complementing projects in APIs, distributed systems, or cloud deployments,) Tj
+T* (- and showing progression from algorithmic code to user-facing software engineering.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 26\) Interview Q&A \(40+ Questions\)) Tj
+T* (1. Why command pattern instead of one parser class?) Tj
+T* (2. How are calendar and event concerns separated?) Tj
+T* (3. How do you handle timezone conversion edge cases?) Tj
+T* (4. Why support both GUI and CLI?) Tj
+T* (5. How do recurring events get represented?) Tj
+T* (6. Difference between edit event / edit events / edit series?) Tj
+T* (7. What is hardest part of recurrence editing?) Tj
+T* (8. How did you keep CLI and GUI behavior consistent?) Tj
+T* (9. Why not persist data to DB yet?) Tj
+T* (10. What assumptions are made about calendar ownership?) Tj
+T* (11. How is export format selected?) Tj
+T* (12. How would you add JSON export?) Tj
+T* (13. How do you validate malformed commands?) Tj
+T* (14. How are parser errors surfaced to users?) Tj
+T* (15. How do you prevent model exposure to UI?) Tj
+T* (16. Explain `CalendarReadOnly` benefits.) Tj
+T* (17. What tests gave highest confidence?) Tj
+T* (18. What gaps remain in test suite?) Tj
+T* (19. Why JUnit 4 and not JUnit 5?) Tj
+T* (20. How does CI verify code health?) Tj
+T* (21. How would you enforce mutation threshold in PIT?) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Length 2319 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(22. What are major failure modes in production?) Tj
+T* (23. How would you make operations idempotent?) Tj
+T* (24. Where are potential race conditions if multi-threaded?) Tj
+T* (25. How would you support concurrent users?) Tj
+T* (26. How would you version exported schema?) Tj
+T* (27. How do you model all-day events?) Tj
+T* (28. How should daylight-saving transitions be handled?) Tj
+T* (29. What?s your strategy for command backward compatibility?) Tj
+T* (30. How would you migrate to REST APIs?) Tj
+T* (31. How would you shard data at scale?) Tj
+T* (32. How would you optimize analytics queries?) Tj
+T* (33. What profiling would you run first?) Tj
+T* (34. How to secure calendar data at rest/in transit?) Tj
+T* (35. How would you design audit logging?) Tj
+T* (36. How would you test GUI reliably in CI?) Tj
+T* (37. How to improve UX for recurring event edits?) Tj
+T* (38. What technical debt exists now?) Tj
+T* (39. Which classes are most likely to change frequently?) Tj
+T* (40. How would you onboard new contributors quickly?) Tj
+T* (41. What metrics would define success after launch?) Tj
+T* (42. What rollout strategy would you use for risky changes?) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 27\) Scenario-Based Questions \(?What if X happens??\)) Tj
+T* (- What if a timezone is changed after many events exist?) Tj
+T* (- What if two recurring series overlap with same subject?) Tj
+T* (- What if export path is invalid or disk is full?) Tj
+T* (- What if command script ends unexpectedly without `exit`?) Tj
+T* (- What if users request undo/redo?) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 28\) Common Objections & How to Handle Them) Tj
+T* (- ?No database means not production-ready.?) Tj
+T* (  - Correct; this version prioritizes architecture + correctness. Persistence is a planned) Tj
+T* (layer extension.) Tj
+T* (- ?Swing is outdated.?) Tj
+T* (  - True for web distribution; however it proves UI integration and event workflows with) Tj
+T* (minimal setup.) Tj
+T* (- ?CLI syntax is complex.?) Tj
+T* (  - Complexity is mitigated through explicit command classes and scriptability for repeatable) Tj
+T* (workflows.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 29\) Troubleshooting Guide) Tj
+T* (- **Build fails with Java class version error**: align Java runtime with Gradle/plugin) Tj
+ET
+endstream
+endobj
+12 0 obj
+<< /Length 2034 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(compatibility.) Tj
+T* (- **Headless mode complains about missing file**: pass `--mode headless <commands.txt>`.) Tj
+T* (- **No output from script**: ensure commands terminate with `exit`.) Tj
+T* (- **Timezone parse errors**: use valid IANA zone IDs \(e.g., `America/New_York`\).) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 30\) Key Numbers to Memorize) Tj
+T* (- Language target: Java 11.) Tj
+T* (- Interfaces: CLI + GUI.) Tj
+T* (- Export formats: CSV + ICAL/ICS.) Tj
+T* (- Quality tooling: Checkstyle + JaCoCo + PIT.) Tj
+T* (- Measured run in this environment: 1.133s test command attempt \(failed due compatibility) Tj
+T* (issue\).) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 31\) Resume Line \(Ready to Copy\)) Tj
+T* (Built a Java-based multi-calendar scheduling platform \(CLI + Swing GUI\) supporting) Tj
+T* (timezone-aware recurring events, series edits, cross-calendar copy workflows, analytics) Tj
+T* (dashboards, and CSV/ICS export with CI-driven testing and code quality tooling.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 32\) LinkedIn Post Template) Tj
+T* (I just shipped **Virtual Calendar**, a Java scheduling app with both CLI automation and GUI) Tj
+T* (workflows.) Tj
+T* () Tj
+T* (Highlights:) Tj
+T* (- Multi-calendar + timezone-aware operations) Tj
+T* (- Recurring events with single/future/series edits) Tj
+T* (- Cross-calendar copy + availability queries) Tj
+T* (- Analytics dashboard + CSV/ICS export) Tj
+T* (- Gradle/JUnit/CI quality pipeline) Tj
+T* () Tj
+T* (Great exercise in architecture layering \(command ? service ? model\) and designing for) Tj
+T* (extensibility.) Tj
+T* () Tj
+T* (#java #softwareengineering #systemdesign #testing #portfolio) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## 33\) How to Demo \(Script / Steps\)) Tj
+T* (1. Build: `./gradlew clean build`) Tj
+T* (2. Run headless demo: `java -jar build/libs/calendar-1.0.jar --mode headless res/commands.txt`) Tj
+T* (3. Show generated exports in `res/`.) Tj
+T* (4. Launch GUI and demonstrate:) Tj
+T* (   - creating calendar) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Length 547 >>
+stream
+BT /F1 10 Tf 50 780 Td 12 TL
+(   - adding recurring event) Tj
+T* (   - editing series) Tj
+T* (   - opening analytics dialog) Tj
+T* (5. Conclude with architecture explanation and extension roadmap.) Tj
+T* () Tj
+T* (---) Tj
+T* () Tj
+T* (## Appendix A - Suggested PDF Export Command) Tj
+T* (If `pandoc` is installed:) Tj
+T* (```bash) Tj
+T* (pandoc Virtual-Calender-docs.md -o Virtual-Calender-docs.pdf) Tj
+T* (```) Tj
+T* () Tj
+T* (In this repository, a plain-text PDF artifact has already been generated as) Tj
+T* (`Virtual-Calender-docs.pdf`.) Tj
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+15 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 3 0 R >>
+endobj
+16 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+17 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 5 0 R >>
+endobj
+18 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+19 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 7 0 R >>
+endobj
+20 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 8 0 R >>
+endobj
+21 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 9 0 R >>
+endobj
+22 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 10 0 R >>
+endobj
+23 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 11 0 R >>
+endobj
+24 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 12 0 R >>
+endobj
+25 0 obj
+<< /Type /Page /Parent 14 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 13 0 R >>
+endobj
+26 0 obj
+<< /Type /Pages /Kids [14 0 R 15 0 R 16 0 R 17 0 R 18 0 R 19 0 R 20 0 R 21 0 R 22 0 R 23 0 R 24 0 R 25 0 R] /Count 12 >>
+endobj
+27 0 obj
+<< /Type /Catalog /Pages 26 0 R >>
+endobj
+xref
+0 28
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000002728 00000 n 
+0000004693 00000 n 
+0000007984 00000 n 
+0000011240 00000 n 
+0000013180 00000 n 
+0000015165 00000 n 
+0000017253 00000 n 
+0000019094 00000 n 
+0000021445 00000 n 
+0000023817 00000 n 
+0000025904 00000 n 
+0000026503 00000 n 
+0000026631 00000 n 
+0000026759 00000 n 
+0000026887 00000 n 
+0000027015 00000 n 
+0000027143 00000 n 
+0000027271 00000 n 
+0000027399 00000 n 
+0000027527 00000 n 
+0000027656 00000 n 
+0000027785 00000 n 
+0000027914 00000 n 
+0000028043 00000 n 
+0000028180 00000 n 
+trailer
+<< /Size 28 /Root 27 0 R >>
+startxref
+28231
+%%EOF
