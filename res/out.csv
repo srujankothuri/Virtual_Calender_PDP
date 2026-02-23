@@ -1,0 +1,11 @@
+Subject,Start Date,Start Time,End Date,End Time,All Day Event,Description,Location,Private
+AllDay Retreat,05/06/2025,,05/06/2025,,True,,,False
+Study,05/07/2025,9:00 AM,05/07/2025,10:00 AM,False,,,False
+Yoga,05/08/2025,6:00 PM,05/08/2025,7:00 PM,False,,,True
+Study,05/12/2025,9:30 AM,05/12/2025,10:00 AM,False,,,False
+Study,05/12/2025,9:30 AM,05/14/2025,10:00 AM,False,,,False
+Yoga,05/13/2025,6:00 PM,05/13/2025,7:00 PM,False,,,True
+Yoga,05/15/2025,6:00 PM,05/15/2025,7:00 PM,False,,,True
+Yoga,05/20/2025,6:00 PM,05/20/2025,7:00 PM,False,,,True
+Yoga,05/22/2025,6:00 PM,05/22/2025,7:00 PM,False,,,True
+Lebron,12/05/2025,10:00 AM,12/05/2025,11:00 AM,False,,,False

@@ -1,0 +1,48 @@
+create calendar --name Manoj --timezone America/New_York
+create calendar --name Srujan --timezone America/Los_Angeles
+create calendar --name Lebron --timezone America/New_York
+create calendar --name Kawhi --timezone Europe/London
+
+use calendar --name Kawhi
+
+create event "boston" from 2024-02-12T14:00 to 2024-03-12T15:30 repeats TR for 4 times
+create event boston game from 2024-03-11T10:00 to 2024-03-11T12:00 repeats MWR until 2024-03-21
+create event boston game from 2024-03-11T09:00 to 2024-03-11T09:30
+create event boston game on 2024-03-14
+
+print events on 2024-03-11
+print events from 2024-03-11T00:00 to 2024-03-22T00:00
+show status on 2024-03-13T10:30
+
+copy event boston game on 2024-03-11T10:00 --target Srujan to 2024-04-01T10:00
+copy event boston game on 2024-03-11T10:00 --target Lebron to 2024-04-08T10:00
+copy event boston game on 2024-03-11T09:00 --target Kawhi to 2024-03-20T09:00
+copy events on 2024-03-14 --target Srujan to 2024-04-15
+copy events between 2024-03-11 and 2024-03-18 --target Kawhi to 2024-04-10
+
+copy events between 2024-03-11 and 2024-03-13 --target Manoj to 2024-03-25
+copy events on 2024-03-14 --target Manoj to 2024-03-28
+
+edit calendar --name Manoj --property timezone Europe/Paris
+create event boston game from 2024-03-19T09:00 to 2024-03-19T09:20
+
+edit event subject boston game from 2024-03-13T10:00 to 2024-03-13T12:00 with boston game
+edit events subject boston game from 2024-03-18T10:00 with boston game
+edit series subject boston game from 2024-03-11T10:00 with boston game
+edit event start boston game from 2024-03-20T10:00 to 2024-03-20T12:00 with 2024-03-20T10:30
+edit events start boston game from 2024-03-18T10:00 with 2024-03-18T10:30
+edit series start boston game from 2024-03-11T10:00 with 2024-03-11T10:00
+
+copy event boston game on 2024-03-19T09:00 --target Srujan to 2024-03-21T09:00
+
+export cal res/manoj.csv
+export cal res/manoj.ical
+use calendar --name Srujan
+export cal res/srujan.csv
+export cal res/srujan.ical
+use calendar --name Lebron
+export cal res/lebron.csv
+use calendar --name Kawhi
+export cal res/kawhi.ical
+
+exit

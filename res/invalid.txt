@@ -1,0 +1,36 @@
+# --- No active calendar ---
+copy event office-hours-cs5010 on 2024-03-11T10:00 --target Alpha to 2024-04-01T10:00
+
+# --- Minimal setup for the remaining invalid cases ---
+create calendar --name Alpha --timezone America/New_York
+create calendar --name East  --timezone America/New_York
+use calendar --name Alpha
+create event office-hours-cs5010 from 2024-03-11T10:00 to 2024-03-11T12:00 repeats MWR until 2024-03-21
+
+# --- Recurring creation: bad weekday token ---
+create event bad-days from 2024-03-12T09:00 to 2024-03-12T10:00 repeats MQ for 3 times
+
+# --- Recurring creation: "until" before the start window (nonsense) ---
+create event bad-until from 2024-03-20T09:00 to 2024-03-20T10:00 repeats TR until 2024-03-01
+
+# --- Recurring creation: single instance spans multiple days (end must be same day) ---
+create event overnight-bad from 2024-03-12T23:30 to 2024-03-13T00:30 repeats TR for 2 times
+
+# --- Copy series: non-existent source occurrence time (typo minute) ---
+copy event office-hours-cs5010 on 2024-03-11T10:05 --target East to 2024-04-01T10:00
+
+# --- Copy series: missing 'to' clause ---
+copy event office-hours-cs5010 on 2024-03-11T10:00 --target East
+
+# --- Copy day: malformed date format ---
+copy events on 2024/03/14 --target East to 2024-04-15
+
+# --- Copy range: inverted endpoints ---
+copy events between 2024-03-20 and 2024-03-10 --target East to 2024-03-25
+
+# --- Copy within same calendar causing duplicates (conflict on subject+start+end) ---
+copy event office-hours-cs5010 on 2024-03-11T10:00 --target Alpha to 2024-03-11T10:00
+
+# --- Edit recurring: ambiguous identification (subject matches multiple events at the same start) ---
+# (Set up an ambiguity by creating a duplicate subject different series start)
+create event office-hours-cs5010 from 2024-04-01T10:00 to

@@ -1,0 +1,94 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.15.0'
+}
+
+group 'calendar'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.testng:testng:7.1.0'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'CalendarRunner'
+    }
+    // Uncomment below to create a fat JAR with all dependencies
+    // from {
+    //     configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    // }
+    // duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required = true
+        xml.required = false
+        csv.required = true
+    }
+}
+
+test {
+    useJUnit()
+    finalizedBy tasks.jacocoTestReport
+    ignoreFailures = true
+}
+
+application {
+    mainClass = 'CalendarRunner'
+}
+
+checkstyle {
+    toolVersion = '10.23.1'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    maxWarnings = 0
+    ignoreFailures = false
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+// PIT Mutation Testing Configuration
+pitest {
+    targetClasses = ['calendar.**'] // Adjust to match your package structure
+    targetTests = ['*'] // Adjust to match your test package structure
+    pitestVersion = '1.15.8'
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+//    mutationThreshold = 90
+    // Exclude certain mutators if needed
+    // excludedMethods = ['hashCode', 'equals']
+    // Include specific mutators (optional - by default all are included)
+    // mutators = ['STRONGER']
+    // Test plugin configuration for JUnit 4
+    testPlugin = 'junit'
+    // Verbose output
+    verbose = true
+    // Export line coverage data
+    exportLineCoverage = true
+    // Fail build if mutation score is below threshold
+    failWhenNoMutations = false
+}
